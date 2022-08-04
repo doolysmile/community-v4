@@ -25,7 +25,11 @@ public class ArticleServiceTest {
         // 테스트에 필요한 샘플데이터를 만든다고 보면 된다.
         makeArticleTestData();
     }
-
+    private void truncateArticleTable() {
+        MyMap myMap = Container.getObj(MyMap.class);
+        // 테이블을 깔끔하게 지워준다.
+        myMap.run("TRUNCATE article");
+    }
     private void makeArticleTestData() {
         MyMap myMap = Container.getObj(MyMap.class);
 
@@ -43,12 +47,6 @@ public class ArticleServiceTest {
                     isBlind = ?
                     """, title, body, isBlind);
         });
-    }
-
-    private void truncateArticleTable() {
-        MyMap myMap = Container.getObj(MyMap.class);
-        // 테이블을 깔끔하게 지워준다.
-        myMap.run("TRUNCATE article");
     }
 
     @Test
@@ -101,5 +99,22 @@ public class ArticleServiceTest {
         assertThat(articleDto.getCreatedDate()).isNotNull();
         assertThat(articleDto.getModifiedDate()).isNotNull();
         assertThat(articleDto.isBlind()).isEqualTo(false);
+    }
+
+
+    @Test
+    public void modify() {
+        ArticleService articleService = Container.getObj(ArticleService.class);
+
+        articleService.modify(1, "제목 new", "내용 new", true);
+
+        ArticleDto articleDto = articleService.getArticleById(1);
+
+        assertThat(articleDto.getId()).isEqualTo(1);
+        assertThat(articleDto.getTitle()).isEqualTo("제목 new");
+        assertThat(articleDto.getBody()).isEqualTo("내용 new");
+        assertThat(articleDto.getCreatedDate()).isNotNull();
+        assertThat(articleDto.getModifiedDate()).isNotNull();
+        assertThat(articleDto.isBlind()).isEqualTo(true);
     }
 }
