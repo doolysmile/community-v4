@@ -7,6 +7,8 @@ import com.ll.exam.article.repository.ArticleRepository;
 
 import java.util.List;
 
+import static java.time.LocalTime.now;
+
 @Service
 public class ArticleService {
     @Autowired
@@ -14,5 +16,17 @@ public class ArticleService {
 
     public List<ArticleDto> getArticles() {
         return articleRepository.getArticles();
+    }
+
+    public ArticleDto getArticleById(long id) {
+        return articleRepository.getArticleById(id);
+    }
+
+    public long getArticlesCount() {
+        return articleRepository.getArticlesCount();
+    }
+
+    public long write(String title, String body, boolean isBlind) {
+        return articleRepository.write(title, body, isBlind);
     }
 }
